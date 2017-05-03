@@ -2,7 +2,9 @@
   (:require [rum.core :as rum]
             [datascript.core :as d]
             [trak.utils :as utils]
-            [trak.db :as db]))
+            [trak.db :as db]
+            [trak.ui.components :as components]
+            [trak.globals :as globals]))
 
 
 (defn album-artists [artists]
@@ -23,5 +25,11 @@
 (rum/defc app [*db]
   (when-let [match (utils/current-path *db)]
     (utils/info "Application mounted. Matched: " match)
-    (cond
-      (= (:handler (utils/current-path *db)) :index) (albums *db))))
+    [:div
+     (cond
+       (empty? (db/me *db)) (components/link
+                              {:href (globals/spotify-authorization-link "user-read-private user-read-email") :class-name "btn btn-primary"}
+                              "Log in")
+       :else "noi")
+     (cond
+       (= (:handler (utils/current-path *db)) :index) (albums *db))]))
