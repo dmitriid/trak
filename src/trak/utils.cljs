@@ -22,3 +22,11 @@
 
 
 
+;; DB Utils
+
+(defn current-path [db]
+  (when-let [match (:application/state (first (d/q '[:find [(pull ?e [:application/state])]
+                                                     :in $ ?type
+                                                     :where [?e :application/state-type ?type]]
+                                                   db :path)))]
+    {:handler (:handler match) :params (:params match)}))
