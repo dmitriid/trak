@@ -40,7 +40,11 @@ in ten lines of code.
 ## Setup
 
 Copy `profiles.clj.sample` to `profiles.clj` and edit `:env` values to your 
-liking
+liking.
+
+**Note: This is a client-side only app. So any secrets you define there
+ will be injected into the page and visible to anyone with access to
+ the page's Javascript.**
 
 To get an interactive development environment run:
 
