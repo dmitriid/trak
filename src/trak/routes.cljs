@@ -10,11 +10,13 @@
 ;; -------------------------
 ;; Bidi routes
 
-(def routes ["/" {""        :index
-                  "cities/" {[:id] :city}
-                  "venues/" {[:id] {""                :venue
-                                    ["/" :venue-name] :venue}
-                             }}])
+(def routes ["/" {"" :index
+                  ;"cities/" {[:id] :city}
+                  ;"venues/" {[:id] {""                :venue
+                  ;                  ["/" :venue-name] :venue}
+                  ;           }
+                  }
+             ])
 
 ;; -------------------------
 ;; History
@@ -62,4 +64,5 @@
 
 (defmethod handler :index [path route-params]
   (utils/info ["Handled path " path route-params])
-  (pubsub/publish :actions {:action :find-albums}))
+  ;(pubsub/publish :actions {:action :find-albums})
+  )
