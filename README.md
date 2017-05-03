@@ -1,10 +1,42 @@
 # trak
 
-FIXME: Write a one-line description of your library/project.
+A toy project to teach myself/explore Clojurescript
 
 ## Overview
 
-FIXME: Write a paragraph about the library/project and highlight its goals.
+An idea:
+
+- All "business logic" happens via `core.async` pub/sub
+- Views only react to database changes 
+
+This may be too convoluted and I might rethink the approach, but why not :)
+
+### What database?
+
+[Datascript](https://github.com/tonsky/datascript). Read the author's
+own blog posts on it to see what is going on (all of them backed up by source 
+code): 
+
+- [Chatting cats use DataScript for fun](http://tonsky.me/blog/datascript-chat/)
+- [Another powered-by-DataScript example](http://tonsky.me/blog/acha-acha/)
+
+Using Datascript's `d/listen!` we re-render the app when database is updated
+
+### What pub/sub?
+
+[core.async Pub Sub](https://github.com/clojure/core.async/wiki/Pub-Sub). 
+A `core.async` channel is acting as a message queue. You can publish messages
+to a topic in this queue. You can subscribe to the queue and listen to messages
+in a topic. Yes, this works even in the browser.
+
+Got this idea from [Chatting cats use DataScript for fun](http://tonsky.me/blog/datascript-chat/)
+
+This way you can implement the entire [Redux](http://redux.js.org) architecture
+in ten lines of code.
+
+## What/how?
+
+..TODO..
 
 ## Setup
 
@@ -12,28 +44,14 @@ To get an interactive development environment run:
 
     lein figwheel
 
-and open your browser at [localhost:3449](http://localhost:3449/).
-This will auto compile and send all changes to the browser without the
-need to reload. After the compilation process is complete, you will
-get a Browser Connected REPL. An easy way to try it is:
+or
 
-    (js/alert "Am I connected?")
+    rlwrap lein figwheel
 
-and you should see an alert in the browser window.
+for a better REPL
 
-To clean all compiled files:
-
-    lein clean
-
-To create a production build run:
-
-    lein do clean, cljsbuild once min
-
-And open your browser in `resources/public/index.html`. You will not
-get live reloading, nor a REPL. 
+Open your browser at [localhost:3449](http://localhost:3449/).
 
 ## License
 
-Copyright © 2014 FIXME
-
-Distributed under the Eclipse Public License either version 1.0 or (at your option) any later version.
+MIT, see [LICENSE](./LICENSE)
