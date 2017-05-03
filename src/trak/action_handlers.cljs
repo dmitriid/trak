@@ -1,4 +1,4 @@
-(ns trak.action-handlers
+(ns trak.action_handlers
   (:require [datascript.core :as d]
             [trak.utils :as utils]
             [trak.api :as api]))
