@@ -31,3 +31,6 @@
                              :where [?album :album/id _]]
                            db)))
 
+(defn me [db]
+  (unpack-entities db (d/q '[:find ?me
+                             :where [?me :me/logged-in _]])))
