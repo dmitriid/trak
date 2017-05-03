@@ -16,10 +16,13 @@
                  [com.andrewmcveigh/cljs-time "0.4.0"]
                  ; [devcards "0.2.3"]
                  [bidi "2.0.16"]
+                 [environ "1.1.0"]
                  ]
 
   :plugins [[lein-figwheel "0.5.10"]
-            [lein-cljsbuild "1.1.5" :exclusions [[org.clojure/clojure]]]]
+            [lein-cljsbuild "1.1.5" :exclusions [[org.clojure/clojure]]]
+            [lein-environ "1.1.0"]
+            ]
 
   :source-paths ["src"]
 
@@ -53,7 +56,7 @@
                 :compiler     {:output-to     "resources/public/js/compiled/trak.js"
                                :main          trak.core
                                :optimizations :advanced
-                               :pretty-print  false}}]}
+                               :pretty-print  true}}]}
 
   :figwheel {;; :http-server-root "public" ;; default and assumes "resources"
              ;; :server-port 3449 ;; default
@@ -98,14 +101,4 @@
   ;; setting up nREPL for Figwheel and ClojureScript dev
   ;; Please see:
   ;; https://github.com/bhauman/lein-figwheel/wiki/Using-the-Figwheel-REPL-within-NRepl
-  :profiles {:dev {:dependencies  [[binaryage/devtools "0.9.2"]
-                                   [figwheel-sidecar "0.5.10"]
-                                   [com.cemerick/piggieback "0.2.1"]]
-                   ;; need to add dev source path here to get user.clj loaded
-                   :source-paths  ["src" "dev"]
-                   ;; for CIDER
-                   ;; :plugins [[cider/cider-nrepl "0.12.0"]]
-                   :repl-options  {:nrepl-middleware [cemerick.piggieback/wrap-cljs-repl]}
-                   ;; need to add the compliled assets to the :clean-targets
-                   :clean-targets ^{:protect false} ["resources/public/js/compiled"
-                                                     :target-path]}})
+  :profiles {})

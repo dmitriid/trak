@@ -36,9 +36,11 @@ in ten lines of code.
 
 ## What/how?
 
-..TODO..
 
 ## Setup
+
+Copy `profiles.clj.sample` to `profiles.clj` and edit `:env` values to your 
+liking
 
 To get an interactive development environment run:
 

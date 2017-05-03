@@ -15,3 +15,6 @@ pom.xml
 .idea
 trak.iml
 
+resources/conf/*.properties
+profiles.clj
+.lein-env
