@@ -22,3 +22,12 @@
   (->> collection-of-ids
        (map first)
        (map #(d/entity db %))))
+
+
+;; Data retrieval
+
+(defn get-albums [db]
+  (unpack-entities db (d/q '[:find ?album
+                             :where [?album :album/id _]]
+                           db)))
+
