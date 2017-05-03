@@ -8,7 +8,11 @@
     [rum.core :as rum]
     [trak.api :as api]
     [trak.ui.app :as ui.app]
-    [trak.action-handlers :as action-handlers]))
+    [trak.action_handlers :as action-handlers]
+    [trak.pubsub :as pubsub]
+    ;[trak.config :as conf :refer [cljs-env]]
+    )
+  )
 
 (enable-console-print!)
 
@@ -39,7 +43,7 @@
                             @*db name))]
     (if (nil? channel)
       nil
-      (trak.pubsub/unsubscribe (:subscription/topic channel) (:subscription/channel channel)))
+      (pubsub/unsubscribe (:subscription/topic channel) (:subscription/channel channel)))
     (let [new-channel (pubsub/subscribe
                         topic
                         callback)]
