@@ -64,5 +64,6 @@
 
 (defmethod handler :index [path route-params]
   (utils/info ["Handled path " path route-params])
+  (pubsub/publish :actions {:action :login-on-arrival})
   ;(pubsub/publish :actions {:action :find-albums})
   )
