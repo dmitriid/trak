@@ -34,5 +34,12 @@
 (defmethod api-result-handler :find-albums [action response *db]
   (utils/info "Action received " action response)
   (when-let [{{{albums :items} :albums} :body} response]
-    (d/transact! *db (json-to-datascript albums :album))))
     (d/transact! *db (db/json-to-datascript albums :album))))
+
+(defmethod api-result-handler :me [action response *db]
+  (utils/info "Action received " action response)
+  (cond
+    (= 401 (:status response)) (d/transact! *db [{:me/identifier :me :me/status :logged-out}])
+    (= 200 (:status response))
+    (d/transact! *db [(merge {:me/identifier :me :me/status :logged-in}
+                             (db/convert-atrrs-to-datascript (:body response) :me))])))
