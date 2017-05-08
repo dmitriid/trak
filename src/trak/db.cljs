@@ -8,6 +8,9 @@
 (defonce conn (d/create-conn {:application/state-type {:db/unique :db.unique/identity}
                               :application/state      {}
 
+                              :me/identifier          {:db/unique :db.unique/identity}
+                              :me/status              {}
+
                               :subscription/name      {}
                               :subscription/channel   {}
                               }))
@@ -32,8 +35,12 @@
                            db)))
 
 (defn me [db]
-  (unpack-entities db (d/q '[:find ?me
-                             :where [?me :me/logged-in _]])))
+  (d/entity db (ffirst (d/q '[:find ?me
+                              :in $ ?identity
+                              :where [?me :me/identifier ?identity]] db :me))))
+
+
+
 ;; Utilities
 
 ;; Convert prefix and key to :prefix/key to use with Datascript
