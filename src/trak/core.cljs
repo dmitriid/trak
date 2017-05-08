@@ -22,18 +22,6 @@
   (rum/mount (ui.app/app db) (.getElementById js/document "app")))
 
 
-;; handlers, callbacks, pubsubs
-
-
-(defn set-current-path-to-db [match *db]
-  (let [path-state (d/q '[:find ?e
-                          :where [?e :path/state _]] @*db)]
-    (when-not path-state
-      (d/transact! *db [{:path/state match}]))
-    (when path-state
-      (d/transact! *db [{:db/id (ffirst path-state) :path/state match}]))))
-
-
 ;; If a subscription with this name to this topic exists,
 ;; first unsubscribe, then add a new subscription
 (defn subscribe-pubsub [*db name topic callback]

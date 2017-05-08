@@ -34,3 +34,22 @@
 (defn me [db]
   (unpack-entities db (d/q '[:find ?me
                              :where [?me :me/logged-in _]])))
+;; Utilities
+
+;; Convert prefix and key to :prefix/key to use with Datascript
+(defn to-prefixed-keyword [prefix key]
+  (cond
+    (= key :db/id) key
+    :else (keyword (name prefix) (name key))))
+
+;; Convert {:name "event" :startTime "1234"} to
+;;         {:event/name "event" :event/startTime "1234}
+;; etc.
+
+(defn convert-atrrs-to-datascript [attrs keyword-prefix]
+  (reduce #(assoc %1 (to-prefixed-keyword keyword-prefix (first %2)) (second %2)) {} attrs))
+
+(defn json-to-datascript [collection-of-entities keyword-prefix]
+  (map (fn [entity]
+         (convert-atrrs-to-datascript entity keyword-prefix))
+       collection-of-entities))

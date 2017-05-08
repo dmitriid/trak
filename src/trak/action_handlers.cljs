@@ -42,3 +42,4 @@
   (utils/info "Action received " action response)
   (when-let [{{{albums :items} :albums} :body} response]
     (d/transact! *db (json-to-datascript albums :album))))
+    (d/transact! *db (db/json-to-datascript albums :album))))
