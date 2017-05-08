@@ -3,7 +3,10 @@
             [cljs-http.client :as http]
             [cljs.core.async :refer [<!]]
             [trak.pubsub :as pubsub])
-  (:require-macros [cljs.core.async.macros :refer [go]]))
+  (:require-macros [cljs.core.async.macros :refer [go]]
+                   [trak.config :refer [cljs-env]]))
+
+
 
 
 (defn- api-call
@@ -23,3 +26,12 @@
                                                      :params {:call     :find-albums
                                                               :response response}})))
   )
+
+(defn me [auth]
+  (api-call (partial http/get)
+            "https://api.spotify.com/v1/me"
+            {:with-credentials? false
+             :oauth-token       auth}
+            (fn [response] (pubsub/publish :actions {:action :api-call-result
+                                                     :params {:call     :me
+                                                              :response response}}))))
