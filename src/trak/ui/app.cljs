@@ -22,14 +22,33 @@
   (let [albums (db/get-albums *db)]
     [:.columns (map (fn [album] [:.column.col-6.col-xs-12 {:key (:db/id album)} (album-card album)]) albums)]))
 
+(rum/defc profile-login []
+  (components/link
+    {:href (globals/spotify-authorization-link "user-read-private user-read-email") :class-name "btn btn-primary"}
+    "Log in"))
+
+(rum/defc profile [me]
+  [:div [:h2 (:me/display_name me)] (:me/country me)])
+
+(rum/defc profile-base [*db]
+  (let [me (db/me *db)]
+    (utils/info me (:me/status me))
+    (cond
+      (nil? me) (profile-login)
+      (= :logged-out (:me/status me)) (profile-login)
+      (= :logged-in (:me/status me)) (profile me)
+      (= :loading (:me/status me)) [:div "Loading..."])))
+
 (rum/defc app [*db]
   (when-let [match (utils/current-path *db)]
     (utils/info "Application mounted. Matched: " match)
     [:div
-     (cond
-       (empty? (db/me *db)) (components/link
-                              {:href (globals/spotify-authorization-link "user-read-private user-read-email") :class-name "btn btn-primary"}
-                              "Log in")
-       :else "noi")
+     (profile-base *db)
+     ;
+     ;(cond
+     ;  (empty? (db/me *db)) (components/link
+     ;                         {:href (globals/spotify-authorization-link "user-read-private user-read-email") :class-name "btn btn-primary"}
+     ;                         "Log in")
+     ;  :else "noi")
      (cond
        (= (:handler (utils/current-path *db)) :index) (albums *db))]))
