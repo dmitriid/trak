@@ -1,7 +1,9 @@
 (ns trak.action_handlers
   (:require [datascript.core :as d]
             [trak.utils :as utils]
-            [trak.api :as api]))
+            [trak.api :as api]
+            [trak.globals :as globals]
+            [trak.db :as db]))
 
 
 (def api-result-handler)
@@ -9,31 +11,22 @@
 (defmulti handler (fn [action params *db] action))
 
 (defmethod handler :find-albums [_ _ _]
-
   (api/find-albums "blues"))
 
 (defmethod handler :api-call-result [_ params db]
   (utils/info "Api call result " params)
   (api-result-handler (:call params) (:response params) db))
 
-
-;; Utitlity. Convert prefix and key to :prefix/key to use with Datascript
-(defn to-prefixed-keyword [prefix key]
-  (cond
-    (= key :db/id) key
-    :else (keyword (name prefix) (name key))))
-
-;; Convert {:name "event" :startTime "1234"} to
-;;         {:event/name "event" :event/startTime "1234}
-;; etc.
-
-(defn- convert-atrrs-to-datascript [attrs keyword-prefix]
-  (reduce #(assoc %1 (to-prefixed-keyword keyword-prefix (first %2)) (second %2)) {} attrs))
-
-(defn json-to-datascript [collection-of-entities keyword-prefix]
-  (map (fn [entity]
-         (convert-atrrs-to-datascript entity keyword-prefix))
-       collection-of-entities))
+(defmethod handler :login-on-arrival [_ params db]
+  (utils/info "Trying to log in user on arrival " params)
+  (when-let [auth (globals/get-spotify-auth-token)]
+    (utils/info db)
+    (d/transact! db [{:me/identifier :me
+                      :me/status     :loading}])
+    (d/transact! db [(merge {:me/identifier :me}
+                            (db/convert-atrrs-to-datascript auth :me))])
+    (utils/info (:access_token auth))
+    (api/me (:access_token auth))))
 
 
 (defmulti api-result-handler (fn [api result *db] api))
