@@ -30,3 +30,6 @@
                                                      :where [?e :application/state-type ?type]]
                                                    db :path)))]
     {:handler (:handler match) :params (:params match)}))
+
+(defn ifnil? [possibly-nil default]
+  (if (nil? possibly-nil) default possibly-nil))
