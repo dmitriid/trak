@@ -5,16 +5,26 @@
   (:require-macros [cljs.core.async.macros :refer [go]]))
 
 ;; Create database
-(defonce conn (d/create-conn {:application/state-type {:db/unique :db.unique/identity}
-                              :application/state      {}
 
-                              :me/identifier          {:db/unique :db.unique/identity}
                               :me/status              {}
+(defonce schema {:application/state-type {:db/unique :db.unique/identity}
+                 :application/state      {}
 
-                              :subscription/name      {}
-                              :subscription/channel   {}
-                              }))
+                 :me/identifier          {:db/unique :db.unique/identity}
 
+                 :subscription/name      {}
+                 :subscription/channel   {}
+
+                 :playlists/owner        {:db/unique :db.unique/identity}
+                 })
+
+(defn- create-database []
+  (let [db (d/create-conn schema)]
+    (d/transact! db [{:me/identifier :me
+                      :me/status     :logged-out}])
+    db))
+
+(defonce conn (create-database))
 
 ;
 ; If you have a collection of entites (as it's usually
