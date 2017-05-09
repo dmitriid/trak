@@ -6,11 +6,11 @@
 
 ;; Create database
 
-                              :me/status              {}
 (defonce schema {:application/state-type {:db/unique :db.unique/identity}
                  :application/state      {}
 
                  :me/identifier          {:db/unique :db.unique/identity}
+                 :me/status              {}
 
                  :subscription/name      {}
                  :subscription/channel   {}
@@ -49,7 +49,11 @@
                               :in $ ?identity
                               :where [?me :me/identifier ?identity]] db :me))))
 
-
+(defn playlists [db owner_id]
+  (unpack-entities db (d/q '[:find ?playlist
+                             :in $ ?owner_id
+                             :where [?playlist :playlist/owner ?owner]]
+                           db owner_id)))
 
 ;; Utilities
 
