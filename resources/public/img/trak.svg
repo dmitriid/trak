@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="20px" height="20px" viewBox="0 0 20 20" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 43.2 (39069) - http://www.bohemiancoding.com/sketch -->
+    <title>icon record</title>
+    <desc>Created with Sketch.</desc>
+    <defs></defs>
+    <g id="Icons" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="circlecons_vol1" transform="translate(-173.000000, -243.000000)" fill="#2B2933">
+            <g id="vol2" transform="translate(33.000000, 121.000000)">
+                <path d="M150,142 C144.477152,142 140,137.522848 140,132 C140,126.477152 144.477152,122 150,122 C155.522848,122 160,126.477152 160,132 C160,137.522848 155.522848,142 150,142 Z M150,140 C154.418278,140 158,136.418278 158,132 C158,127.581722 154.418278,124 150,124 C145.581722,124 142,127.581722 142,132 C142,136.418278 145.581722,140 150,140 Z M150,136 C147.790861,136 146,134.209139 146,132 C146,129.790861 147.790861,128 150,128 C152.209139,128 154,129.790861 154,132 C154,134.209139 152.209139,136 150,136 Z" id="icon-record"></path>
+            </g>
+        </g>
+    </g>
+</svg>
