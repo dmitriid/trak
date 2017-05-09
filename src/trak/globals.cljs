@@ -27,10 +27,11 @@
                                     :state         (.getRandomString string)}))))
 
 (defn get-spotify-auth-token []
-  (let [fragment (.getFragment (Uri. (.-href (.-location js/document))))
-        fragment (str/split fragment "&")]
-    (reduce (fn [acc part]
-              (let [kw (str/split part "=")]
-                (merge acc {(keyword (first kw)) (second kw)})))
-            {}
-            fragment)))
+  (let [fragment (.getFragment (Uri. (.-href (.-location js/document))))]
+    (cond (= "" fragment) nil
+          :else (let [fragment (str/split fragment "&")]
+                  (reduce (fn [acc part]
+                            (let [kw (str/split part "=")]
+                              (merge acc {(keyword (first kw)) (second kw)})))
+                          {}
+                          fragment)))))
