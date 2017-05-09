@@ -89,3 +89,25 @@
 (rum/defc link [props children]
   (let [proper-props (merge props {:on-click (create-onclick-handler props)})]
     [:a proper-props children]))
+
+
+;;;;;;;;;;;;;;;;;;;;
+;; Icon
+
+
+(rum/defc icon [type]
+  [:img {:src (str "/img/" type ".svg") :width "16"}])
+
+
+
+
+
+
+
+
+
+
+
+
+
+
