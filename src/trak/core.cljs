@@ -47,7 +47,7 @@
                     (utils/info "Path subscriber notified: " match)
                     (d/transact! db/conn [{:application/state-type :path
                                            :application/state      match}])
-                    (routes/handler (:handler match) (:params match))
+                    (routes/handler (:handler match) (:route-params match))
                     (utils/info ["subscribe " match])))
 
 (subscribe-pubsub db/conn :actions-listener :actions
