@@ -69,3 +69,28 @@
     (d/transact! *db [db-playlists])
     (d/transact! *db db-items)
     ))
+
+(defmethod api-result-handler :playlist-tracks [action response *db]
+  (cond
+    (= 200 (:status response))
+    (let [body (:body response)
+          items (:items body)
+          track-items (map (fn [item]
+                             (let [track (:track item)
+                                   album (:album track)
+                                   artists (:artists track)]
+                               {:name         (:name track)
+                                :href         (utils/ifnil? (:href track) "")
+                                :id           (utils/ifnil? (:id track) (.getRandomString string))
+                                :track-number (utils/ifnil? (:track_number track) -1)
+                                :album        (utils/ifnil? (:name album) "")
+                                :album-id     (utils/ifnil? (:id album) (.getRandomString string))
+                                :album-href   (utils/ifnil? (:href album) "")
+                                :album-images (:images album)
+                                :artists      (map (fn [artist] {:name (:name artist) :href (:href artist) :id (:id artist)}) artists)
+                                :duration-ms  (:duration_ms track)
+                                :popularity   (:popularity track)
+                                })) items)
+          db-items (db/json-to-datascript track-items :track)]
+      (d/transact! *db db-items)
+      (d/transact! *db [{:application/state-type :page :application/status :loaded}]))))
