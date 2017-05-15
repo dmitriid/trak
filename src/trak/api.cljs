@@ -43,3 +43,12 @@
             (fn [response] (pubsub/publish :actions {:action :api-call-result
                                                      :params {:call     :user-playlists
                                                               :response response}}))))
+
+(defn playlist [href auth]
+  (api-call (partial http/get)
+            href
+            {:with-credentials? false
+             :oauth-token       auth}
+            (fn [response] (pubsub/publish :actions {:action :api-call-result
+                                                     :params {:call     :playlist-tracks
+                                                              :response response}}))))
