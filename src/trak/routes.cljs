@@ -10,8 +10,8 @@
 ;; -------------------------
 ;; Bidi routes
 
-(def routes ["/" {"" :index
-                  ;"cities/" {[:id] :city}
+(def routes ["/" {""           :index
+                  "playlists/" {[:id] :playlist}
                   ;"venues/" {[:id] {""                :venue
                   ;                  ["/" :venue-name] :venue}
                   ;           }
@@ -60,10 +60,13 @@
 ;; -------------------------
 ;; Route handlers
 
-(defmulti handler (fn [handler route-params] handler))
+(defmulti handler (fn [handler route-params]
+                    (utils/info ["Handled path " handler route-params])
+                    handler))
 
 (defmethod handler :index [path route-params]
-  (utils/info ["Handled path " path route-params])
-  (pubsub/publish :actions {:action :login-on-arrival})
-  ;(pubsub/publish :actions {:action :find-albums})
-  )
+  (pubsub/publish :actions {:action :login-on-arrival}))
+
+(defmethod handler :playlist [path route-params]
+  (pubsub/publish :actions {:action :load-playlist
+                            :params {:id (:id route-params)}}))
