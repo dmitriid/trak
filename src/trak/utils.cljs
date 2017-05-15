@@ -33,3 +33,6 @@
 
 (defn ifnil? [possibly-nil default]
   (if (nil? possibly-nil) default possibly-nil))
+
+(defn filter-nils [some-sequence]
+  (filter (fn [item] (not= nil item)) some-sequence))
