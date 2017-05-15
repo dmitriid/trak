@@ -44,6 +44,18 @@
                              :where [?album :album/id _]]
                            db)))
 
+(defn app-state [db]
+  (:application/state (first (unpack-entities db (d/q '[:find ?state
+                                                        :in $ ?type
+                                                        :where [?state :application/state-type ?type]]
+                                                      db :path)))))
+
+(defn page-state [db]
+  (first (unpack-entities db (d/q '[:find ?state
+                                    :in $ ?type
+                                    :where [?state :application/state-type ?type]]
+                                  db :page))))
+
 (defn me [db]
   (d/entity db (ffirst (d/q '[:find ?me
                               :in $ ?identity
@@ -54,6 +66,16 @@
                              :in $ ?owner_id
                              :where [?playlist :playlist/owner ?owner]]
                            db owner_id)))
+
+(defn playlist [db id]
+  (first (unpack-entities db (d/q '[:find ?playlist
+                                    :in $ ?id
+                                    :where [?playlist :playlist/id ?id]]
+                                  db id))))
+
+(defn tracks [db]
+  (unpack-entities db (d/q '[:find ?track
+                             :where [?track :track/id _]] db)))
 
 ;; Utilities
 
