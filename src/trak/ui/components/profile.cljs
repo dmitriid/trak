@@ -34,6 +34,5 @@
   )
 
 (rum/defc profile [db]
-  (utils/info (profile-playlists db))
   [:ul.sidebar-nav.nav
    [:li.nav-item.active "Playlists" [:ul.nav (profile-playlists db)]]])
