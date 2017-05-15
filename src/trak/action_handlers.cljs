@@ -3,7 +3,8 @@
             [trak.utils :as utils]
             [trak.api :as api]
             [trak.globals :as globals]
-            [trak.db :as db]))
+            [trak.db :as db])
+  (:import goog.string))
 
 
 (def api-result-handler)
@@ -15,17 +16,25 @@
 (defmethod handler :find-albums [_ _ _]
   (api/find-albums "blues"))
 
-(defmethod handler :api-call-result [_ params db]
-  (api-result-handler (:call params) (:response params) db))
+(defmethod handler :api-call-result [_ params *db]
+  (api-result-handler (:call params) (:response params) *db))
 
-(defmethod handler :login-on-arrival [_ params db]
+(defmethod handler :login-on-arrival [_ params *db]
   (when-let [auth (globals/get-spotify-auth-token)]
-    (d/transact! db [(merge {:me/identifier :me
-                             :me/status     :loading}
-                            (db/convert-atrrs-to-datascript auth :me))])
-    (api/me (:access_token auth))
-    ))
+    (d/transact! *db [(merge {:me/identifier :me
+                              :me/status     :loading}
+                             (db/convert-atrrs-to-datascript auth :me))])
+    (api/me (:access_token auth))))
 
+(defmethod handler :load-playlist [_ params *db]
+  (d/transact! *db (map (fn [track] [:db.fn/retractEntity (:db/id track)]) (db/tracks @*db)))
+  (d/transact! *db [{:application/state-type :page
+                     :application/state      {:title (:playlist/name (db/playlist @*db (:id params)))}
+                     :application/status     :loading}])
+  (let [id (:id params)]
+    (when-let
+      [tracks (:playlist/tracks (db/playlist @*db id))]
+      (api/playlist (:href tracks) (:me/access_token (db/me @*db))))))
 
 (defmulti api-result-handler (fn [api result *db]
                                (utils/debug "API result handler " api " with result " result)
